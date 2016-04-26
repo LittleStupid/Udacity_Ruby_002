@@ -74,15 +74,17 @@ puts "|_|                                       "
     puts "Stock : " + stock.to_s
     
     sold_num = 0
+    total_price = 0.0
     total_revenue = 0.0
     by_brand.each do |its|  
     
       sold_num += its["purchases"].inject(0) { |total_num, it| total_num + 1 }
-      total_revenue += its["purchases"].inject(0) { |total_rvn, it| total_rvn + its["full-price"].to_f }
+      total_price += its["purchases"].inject(0) { |total_prc, it| total_prc + its["full-price"].to_f }
+      total_revenue += its["purchases"].inject(0) { |total_rvn, it| total_rvn + it["price"].to_f }
     end
     
     #puts "Sold_Num : " + sold_num.to_s
-    puts "Avarage Revenue : " + (total_revenue/sold_num).round(2).to_s
+    puts "Avarage Price : " + (total_price/sold_num).round(2).to_s
     puts "Total Revenue : " + total_revenue.round(2).to_s
     
     #puts by_brand
