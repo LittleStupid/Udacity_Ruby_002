@@ -25,16 +25,11 @@ puts "|_|                                       "
   # Calculate and print the average discount (% or $) based off the average sales price
   
   #--------------------------------------------------------------  
-  products_hash["items"].each do |items|
-    num = 0
-    total_amount = 0.0
-  
-    items["purchases"].each do |item|
-      puts items["title"]
-      puts item["full-price"]
+  products_hash["items"].each do |items|  
+    puts "Name : " + items["title"]
+    puts "retail price : " + items["full-price"]
     
-      num = num + 1
-    end
+    num = items["purchases"].length
     
     total_amount = items["purchases"].inject(0) { |total, each_one| total + each_one["price"] }
   
