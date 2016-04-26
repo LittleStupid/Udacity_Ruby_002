@@ -4,7 +4,8 @@ file = File.read(path)
 products_hash = JSON.parse(file)
 
 # Print today's date
-puts "2016-04-25"
+require 'date'
+puts Date.today
 
 puts "                     _            _       "
 puts "                    | |          | |      "
@@ -30,12 +31,12 @@ puts "|_|                                       "
   
     items["purchases"].each do |item|
       puts items["title"]
-      puts item["price"]
+      puts item["full-price"]
     
       num = num + 1
-    
-      total_amount += item["price"]
     end
+    
+    total_amount = items["purchases"].inject(0) { |total, each_one| total + each_one["price"] }
   
     average_price = total_amount/num
   
@@ -62,48 +63,33 @@ puts "|_|                                       "
   # Calculate and print the average price of the brand's toys
   # Calculate and print the total revenue of all the brand's toy sales combined
   
-  lego_stock = 0
-  nano_stock = 0
+  brand_name = products_hash["items"].map { |items| items["brand"] }.uniq
   
-  lego_total_revenue = 0.0
-  nano_total_revenue = 0.0
-  
-  lego_sold_num = 0
-  nano_sold_num = 0
-  
-  products_hash["items"].each do |items|
-    if( items["brand"] == "LEGO" )
-       lego_stock += items["stock"]
-      
-      items["purchases"].each do |item|
-        lego_sold_num += 1
-        lego_total_revenue += item["price"]
-      end
+  brand_name.each do |name|
+    puts "Brand : " + name
     
-    else
+    by_brand = products_hash["items"].select { |it| it["brand"] == name }
     
-      nano_stock += items["stock"]
-      
-      items["purchases"].each do |item|
-        nano_sold_num += 1
-        nano_total_revenue += item["price"]
-      end
+    stock = by_brand.inject(0) { |total, it| total + it["stock"] } 
+    puts "Stock : " + stock.to_s
+    
+    sold_num = 0
+    total_revenue = 0.0
+    by_brand.each do |its|  
+    
+      sold_num += its["purchases"].inject(0) { |total_num, it| total_num + 1 }
+      total_revenue += its["purchases"].inject(0) { |total_rvn, it| total_rvn + its["full-price"].to_f }
     end
     
+    #puts "Sold_Num : " + sold_num.to_s
+    puts "Avarage Revenue : " + (total_revenue/sold_num).round(2).to_s
+    puts "Total Revenue : " + total_revenue.round(2).to_s
+    
+    #puts by_brand
+    puts "--------------"
   end
   
-  puts "LEGO"
-  puts "Num in Stock : " + lego_stock.to_s
-  puts "Average Price : " + (lego_total_revenue/lego_sold_num).round(2).to_s
-  puts "Revenue : " + lego_total_revenue.round(2).to_s
-  
-  puts "-----------------------"
-  
-  puts "Nano Blocks"
-  puts "Num in Stock : " + nano_stock.to_s
-  puts "Average Price : " + (nano_total_revenue/nano_sold_num).round(2).to_s
-  puts "Revenue : " + nano_total_revenue.round(2).to_s  
-  
+#  puts lego_items.length
   
   
   
